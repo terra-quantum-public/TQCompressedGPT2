@@ -1,0 +1,133 @@
+layers:
+    transformer.wte:
+        d: 2
+        n_iter: 5
+        q_num: 0
+        use_p: True
+        use_q: True
+    transformer.wte.embedding:
+        d: 2
+        n_iter: 5
+        q_num: 2
+        use_p: True
+        use_q: True
+    transformer.h.1.mlp.c_fc:
+        r: 4
+        m1: 384
+        n1: 768
+        m2: 2
+        n2: 4
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.1.mlp.c_proj:
+        r: 4
+        m1: 768
+        n1: 384
+        m2: 4
+        n2: 2
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.3.mlp.c_fc:
+        r: 4
+        m1: 384
+        n1: 768
+        m2: 2
+        n2: 4
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.3.mlp.c_proj:
+        r: 4
+        m1: 768
+        n1: 384
+        m2: 4
+        n2: 2
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.5.mlp.c_fc:
+        r: 4
+        m1: 384
+        n1: 768
+        m2: 2
+        n2: 4
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.5.mlp.c_proj:
+        r: 4
+        m1: 768
+        n1: 384
+        m2: 4
+        n2: 2
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.7.mlp.c_fc:
+        r: 4
+        m1: 384
+        n1: 768
+        m2: 2
+        n2: 4
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.7.mlp.c_proj:
+        r: 4
+        m1: 768
+        n1: 384
+        m2: 4
+        n2: 2
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.9.mlp.c_fc:
+        r: 4
+        m1: 384
+        n1: 768
+        m2: 2
+        n2: 4
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.9.mlp.c_proj:
+        r: 4
+        m1: 768
+        n1: 384
+        m2: 4
+        n2: 2
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.11.mlp.c_fc:
+        r: 4
+        m1: 384   
+        n1: 768
+        m2: 2
+        n2: 4
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True
+    transformer.h.11.mlp.c_proj:
+        r: 4
+        m1: 768
+        n1: 384
+        m2: 4
+        n2: 2
+        n_iter: 5
+        q_num: 1
+        use_p: True
+        use_q: True

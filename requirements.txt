@@ -1,0 +1,4 @@
+torch==2.0.1
+transformers==4.31.0
+opt_einsum==v3.3.0
+omegaconf==2.3.0
