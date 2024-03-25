@@ -9,13 +9,13 @@ on:
 jobs:
   notifySlack:
     runs-on: ubuntu-latest
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      SLACK_CHANNEL: 'C06RLL2PK7B'
     steps:
       - name: Notify Slack on Issue or Comment
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL: 'C06RLL2PK7B' # we must add the Slack channel ID here for this to work
         run: |
-          ISSUE_PAYLOAD=$(cat <<EOF
+          ISSUE_PAYLOAD=$(cat <<'EOF'
           {
             "channel":"$SLACK_CHANNEL",
             "blocks":[
@@ -23,7 +23,7 @@ jobs:
                 "type":"section",
                 "text":{
                   "type":"mrkdwn",
-                  "text":"*<${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>*\n${{ github.event.issue.body }}"
+                  "text":"\*<${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>\*\n${{ github.event.issue.body }}"
                 }
               },
               {
@@ -40,7 +40,7 @@ jobs:
           EOF
           )
 
-          COMMENT_PAYLOAD=$(cat <<EOF
+          COMMENT_PAYLOAD=$(cat <<'EOF'
           {
             "channel":"$SLACK_CHANNEL",
             "blocks":[
@@ -48,7 +48,7 @@ jobs:
                 "type":"section",
                 "text":{
                   "type":"mrkdwn",
-                  "text":"*Comment on <${{ github.event.comment.html_url }}|${{ github.event.issue.title }}> by @${{ github.event.comment.user.login }}:*\n${{ github.event.comment.body }}"
+                  "text":"\*Comment on <${{ github.event.comment.html_url }}|${{ github.event.issue.title }}> by @${{ github.event.comment.user.login }}:\*\n${{ github.event.comment.body }}"
                 }
               },
               {
@@ -72,4 +72,3 @@ jobs:
           fi
 
           curl -X POST -H 'Authorization: Bearer $SLACK_BOT_TOKEN' -H 'Content-type: application/json; charset=utf-8' --data "$PAYLOAD" https://slack.com/api/chat.postMessage
-
