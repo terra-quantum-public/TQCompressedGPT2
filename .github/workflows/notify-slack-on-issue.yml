@@ -1,11 +1,9 @@
 name: GitHub Issue Notification to Slack
-
 on:
   issues:
     types: [opened, edited]
   issue_comment:
     types: [created]
-
 jobs:
   notifySlack:
     runs-on: ubuntu-latest
@@ -15,61 +13,22 @@ jobs:
     steps:
       - name: Notify Slack on Issue or Comment
         run: |
-          ISSUE_PAYLOAD=$(cat <<'EOF'
-          {
-            "channel":"$SLACK_CHANNEL",
-            "blocks":[
-              {
-                "type":"section",
-                "text":{
-                  "type":"mrkdwn",
-                  "text":"\*<${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>\*\n${{ github.event.issue.body }}"
-                }
-              },
-              {
-                "type":"context",
-                "elements":[
-                  {
-                    "type":"mrkdwn",
-                    "text":"Posted by @${{ github.event.issue.user.login }} on ${{ github.event.issue.created_at }}"
-                  }
-                ]
-              }
-            ]
-          }
-          EOF
-          )
-
-          COMMENT_PAYLOAD=$(cat <<'EOF'
-          {
-            "channel":"$SLACK_CHANNEL",
-            "blocks":[
-              {
-                "type":"section",
-                "text":{
-                  "type":"mrkdwn",
-                  "text":"\*Comment on <${{ github.event.comment.html_url }}|${{ github.event.issue.title }}> by @${{ github.event.comment.user.login }}:\*\n${{ github.event.comment.body }}"
-                }
-              },
-              {
-                "type":"context",
-                "elements":[
-                  {
-                    "type":"mrkdwn",
-                    "text":"Posted on ${{ github.event.comment.created_at }}"
-                  }
-                ]
-              }
-            ]
-          }
-          EOF
-          )
-
           if [ "${{ github.event_name }}" == "issues" ]; then
-            PAYLOAD="$ISSUE_PAYLOAD"
+            PAYLOAD=$(cat <<EOF
+            {
+              "channel": "$SLACK_CHANNEL",
+              "text": "${{ github.event.issue.html_url }}"
+            }
+            EOF
+            )
           elif [ "${{ github.event_name }}" == "issue_comment" ]; then
-            PAYLOAD="$COMMENT_PAYLOAD"
+            PAYLOAD=$(cat <<EOF
+            {
+              "channel": "$SLACK_CHANNEL",
+              "text": "${{ github.event.issue.html_url }}"
+            }
+            EOF
+            )
           fi
 
-          echo "Payload: $PAYLOAD"
-          curl -v -X POST -H 'Authorization: Bearer $SLACK_BOT_TOKEN' -H 'Content-type: application/json; charset=utf-8' --data "$PAYLOAD" https://slack.com/api/chat.postMessage
+          curl -X POST -H 'Authorization: Bearer $SLACK_BOT_TOKEN' -H 'Content-type: application/json; charset=utf-8' --data "$PAYLOAD" https://slack.com/api/chat.postMessage
