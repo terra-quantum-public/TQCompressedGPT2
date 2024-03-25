@@ -71,4 +71,5 @@ jobs:
             PAYLOAD="$COMMENT_PAYLOAD"
           fi
 
+          echo "Slack Bot Token: $SLACK_BOT_TOKEN"
           curl -X POST -H 'Authorization: Bearer $SLACK_BOT_TOKEN' -H 'Content-type: application/json; charset=utf-8' --data "$PAYLOAD" https://slack.com/api/chat.postMessage
