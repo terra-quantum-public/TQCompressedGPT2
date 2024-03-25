@@ -1,0 +1,13 @@
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          curl -X POST -H 'Authorization: Bearer $SLACK_TOKEN' \
+               -H 'Content-type: application/json' \
+               --data '{"channel":"C06RLL2PK7B","text":"New issue created: ${{ github.event.issue.title }}"}' \
+               https://slack.com/api/chat.postMessage
+
