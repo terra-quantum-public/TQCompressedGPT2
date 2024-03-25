@@ -13,13 +13,63 @@ jobs:
       - name: Notify Slack on Issue or Comment
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL: 'C06RLL2PK7B'
+          SLACK_CHANNEL: 'C06RLL2PK7B' # we must add the Slack channel ID here for this to work
         run: |
-          ISSUE_PAYLOAD="{\"channel\":\"$SLACK_CHANNEL\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"*<${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>*\n${{ github.event.issue.body }}\"}},{\"type\":\"context\",\"elements\":[{\"type\":\"mrkdwn\",\"text\":\"Posted by @${{ github.event.issue.user.login }} on ${{ github.event.issue.created_at }}\"}]}]}"
-          COMMENT_PAYLOAD="{\"channel\":\"$SLACK_CHANNEL\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"*Comment on <${{ github.event.comment.html_url }}|${{ github.event.issue.title }}> by @${{ github.event.comment.user.login }}:*\n${{ github.event.comment.body }}\"}},{\"type\":\"context\",\"elements\":[{\"type\":\"mrkdwn\",\"text\":\"Posted on ${{ github.event.comment.created_at }}\"}]}]}"
+          ISSUE_PAYLOAD=$(cat <<EOF
+          {
+            "channel":"$SLACK_CHANNEL",
+            "blocks":[
+              {
+                "type":"section",
+                "text":{
+                  "type":"mrkdwn",
+                  "text":"*<${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>*\n${{ github.event.issue.body }}"
+                }
+              },
+              {
+                "type":"context",
+                "elements":[
+                  {
+                    "type":"mrkdwn",
+                    "text":"Posted by @${{ github.event.issue.user.login }} on ${{ github.event.issue.created_at }}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+
+          COMMENT_PAYLOAD=$(cat <<EOF
+          {
+            "channel":"$SLACK_CHANNEL",
+            "blocks":[
+              {
+                "type":"section",
+                "text":{
+                  "type":"mrkdwn",
+                  "text":"*Comment on <${{ github.event.comment.html_url }}|${{ github.event.issue.title }}> by @${{ github.event.comment.user.login }}:*\n${{ github.event.comment.body }}"
+                }
+              },
+              {
+                "type":"context",
+                "elements":[
+                  {
+                    "type":"mrkdwn",
+                    "text":"Posted on ${{ github.event.comment.created_at }}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+
           if [ "${{ github.event_name }}" == "issues" ]; then
-            PAYLOAD=$ISSUE_PAYLOAD
+            PAYLOAD="$ISSUE_PAYLOAD"
           elif [ "${{ github.event_name }}" == "issue_comment" ]; then
-            PAYLOAD=$COMMENT_PAYLOAD
+            PAYLOAD="$COMMENT_PAYLOAD"
           fi
+
           curl -X POST -H 'Authorization: Bearer $SLACK_BOT_TOKEN' -H 'Content-type: application/json' --data "$PAYLOAD" https://slack.com/api/chat.postMessage
+
